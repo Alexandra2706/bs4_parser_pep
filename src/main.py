@@ -10,14 +10,12 @@ from urllib.parse import urljoin
 from configs import configure_argument_parser, configure_logging
 from constants import BASE_DIR, MAIN_DOC_URL, PEP_MAIN_PAGE
 from outputs import control_output
-from utils import get_response, find_tag, get_list_status, get_pep_status
+from utils import get_response, find_tag, get_pep_status
 
 
 def whats_new(session):
     whats_new_url = urljoin(MAIN_DOC_URL, 'whatsnew/')
     response = get_response(session, whats_new_url)
-    if response is None:
-        return
     soup = BeautifulSoup(response.text, features='lxml')
     main_div = find_tag(soup, 'section', attrs={'id': 'what-s-new-in-python'})
     div_with_ul = find_tag(main_div, 'div', attrs={'class': 'toctree-wrapper'})
@@ -41,8 +39,6 @@ def whats_new(session):
 
 def latest_versions(session):
     response = get_response(session, MAIN_DOC_URL)
-    if response is None:
-        return
     soup = BeautifulSoup(response.text, features='lxml')
     sidebar = find_tag(soup, 'div', attrs={'class': 'sphinxsidebarwrapper'})
     ul_tags = sidebar.find_all('ul')
@@ -65,8 +61,6 @@ def latest_versions(session):
 def download(session):
     downloads_url = urljoin(MAIN_DOC_URL, 'download.html')
     response = get_response(session, downloads_url)
-    if response is None:
-        return
     soup = BeautifulSoup(response.text, features='lxml')
     main_tag = find_tag(soup, 'div', {'role': 'main'})
     table_tag = find_tag(main_tag, 'table', attrs={'class': 'docutils'})
@@ -86,8 +80,6 @@ def download(session):
 
 def pep(session):
     response = get_response(session, PEP_MAIN_PAGE)
-    if response is None:
-        return
     soup = BeautifulSoup(response.text, features='lxml')
     section_tag = find_tag(soup, 'section', {'id': 'numerical-index'})
     table_tag = find_tag(section_tag, 'tbody')
@@ -103,8 +95,6 @@ def pep(session):
         link = a_tags['href']
         pep_link = urljoin(PEP_MAIN_PAGE, link)
         response = get_response(session, pep_link)
-        if response is None:
-            return
         soup = BeautifulSoup(response.text, features='lxml')
         pep_status = get_pep_status(soup)
         status_pep_counter[pep_status] += 1

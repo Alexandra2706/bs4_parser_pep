@@ -25,7 +25,7 @@ def pretty_output(results):
     table.align = 'l'
     table.add_rows(results[1:])
     print(table)
-    #если заменить на logging.info(f'\n{table}') не проходят тесты
+    # если заменить на logging.info(f'\n{table}') не проходят тесты
 
 
 def file_output(results, cli_args):
