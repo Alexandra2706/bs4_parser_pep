@@ -3,6 +3,7 @@ import re
 import requests_cache
 
 from bs4 import BeautifulSoup
+from collections import defaultdict
 from tqdm import tqdm
 from urllib.parse import urljoin
 
@@ -56,10 +57,7 @@ def latest_versions(session):
     for a_tag in a_tags:
         link = a_tag['href']
         text_match = re.search(pattern, a_tag.text)
-        if text_match is not None:
-            version, status = text_match.groups()
-        else:
-            version, status = a_tag.text, ''
+        version, status = text_match.groups() if text_match else a_tag.text, ''
         results.append((link, version, status))
     return results
 
@@ -95,9 +93,7 @@ def pep(session):
     table_tag = find_tag(section_tag, 'tbody')
     tr_tags = table_tag.find_all('tr')
     pep_counter = 0
-    status = get_list_status(soup)
-    status_pep_counter = dict.fromkeys(status, 0)
-    pep_status = get_pep_status(soup)
+    status_pep_counter = defaultdict(int)
     results = [('Статус', 'Количество')]
     for row in tqdm(tr_tags):
         abbr_tag = find_tag(row, 'abbr')
@@ -111,10 +107,7 @@ def pep(session):
             return
         soup = BeautifulSoup(response.text, features='lxml')
         pep_status = get_pep_status(soup)
-        if pep_status in status:
-            status_pep_counter[pep_status] += 1
-        else:
-            status_pep_counter[pep_status] = 1
+        status_pep_counter[pep_status] += 1
         if pep_status != status_in_table:
             logging.info(
                 f'\n'

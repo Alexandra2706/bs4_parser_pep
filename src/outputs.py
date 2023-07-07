@@ -8,12 +8,10 @@ from constants import BASE_DIR, DATETIME_FORMAT
 
 def control_output(results, cli_args):
     output = cli_args.output
-    if output == 'pretty':
-        pretty_output(results)
-    elif output == 'file':
-        file_output(results, cli_args)
+    if output == 'file':
+        MODE_TO_OUTPUTS[output](results, cli_args)
     else:
-        default_output(results)
+        MODE_TO_OUTPUTS[output](results)
 
 
 def default_output(results):
@@ -27,6 +25,7 @@ def pretty_output(results):
     table.align = 'l'
     table.add_rows(results[1:])
     print(table)
+    #если заменить на logging.info(f'\n{table}') не проходят тесты
 
 
 def file_output(results, cli_args):
@@ -41,3 +40,10 @@ def file_output(results, cli_args):
         writer = csv.writer(f, dialect='unix')
         writer.writerow(results)
     logging.info(f'Файл с результатами был сохранён: {file_path}')
+
+
+MODE_TO_OUTPUTS = {
+    'pretty': pretty_output,
+    'file': file_output,
+    None: default_output
+}

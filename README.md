@@ -97,3 +97,15 @@ $ python -m pip install --upgrade pip
 ```
 $ pip install -r requirements.txt
 ```
+
+### Использованные технологии
+
+- Python 3.11
+- Beautiful Soup 4.9.3
+- lxml 4.6.3 (модуль парсинга)
+- requests-cache 1.0.0
+- tqdm 4.61.0 (прогресс-бар)
+
+### Автор
+
+Александра Гаврилова
