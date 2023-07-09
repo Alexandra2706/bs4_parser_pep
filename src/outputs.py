@@ -24,7 +24,6 @@ def pretty_output(results):
     table.field_names = results[0]
     table.align = 'l'
     table.add_rows(results[1:])
-    # если заменить на logging.info(f'\n{table}') не проходят тесты
     print(table)
 
 
